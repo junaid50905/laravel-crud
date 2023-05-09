@@ -133,7 +133,6 @@ Route::get('/admin/teacher/create', [TeacherController::class, 'create'])->name(
 
 
     <form action="" method="POST">
-        @csrf
         <div class="form-group">
           <label for="" class="form-label">Color Name</label>
           <input type="text" name="student_name" id="" class="form-control" placeholder="" aria-describedby="helpId">
@@ -224,6 +223,7 @@ Route::get('/admin/color/create', [ColorController::class, 'create'])->name('col
     </ul>
 </li><!-- End Color Nav -->
 ```
+#### make a list where i want to show our data and link the
 
 ### Store
 
@@ -250,17 +250,12 @@ public function authorize(): bool
 
 #### create a method named store in ColorController
 ```
-public function store(ColorRequest $request)
+public function store()
     {
-        try {
-            $new_color = $request->all();
-            Color::create($new_color);
-            return redirect()->route('category.list')->withSuccess_add('Successfully added new product');
-        } catch (Exception $e) {
-            return redirect()->back()->withError_add($e->getMessage());
-        }
+        dd('check');
     }
 ```
+here, we just checked the method is working or not. 
 
 #### make a route for store method then connect the route with form
 
@@ -268,24 +263,23 @@ routes/web.php
 ```
 Route::get('/admin/color/store', [ColorController::class, 'store'])->name('color.store');
 ```
-
-connect the route link with form action attribute and put the @csrf token after the form element
+connect the store route link with form action attribute and put the @csrf token after the form element
 
 backend/color/create.php
 ```
-<form action="{{ route('color.create') }}" method="POST">
-        @csrf
-        <div class="form-group">
-          <label for="" class="form-label">Color Name</label>
-          <input type="text" name="student_name" id="" class="form-control" placeholder="" aria-describedby="helpId">
-          @error('student_name')
-              <p class="text-danger">{{ $message; }}</p>
-          @enderror
-        </div>
-        
-        <button class="btn btn-primary mt-2" type="submit">Save</button>
-        <button class="btn btn-danger mt-2" type="reset">Cancel</button>
-    </form>
+<form action="{{ route('color.store') }}" method="POST">
+    @csrf
+    <div class="form-group">
+      <label for="" class="form-label">Color Name</label>
+      <input type="text" name="color_name" id="" class="form-control" placeholder="" aria-describedby="helpId">
+      @error('color_name')
+          <p class="text-danger">{{ $message; }}</p>
+      @enderror
+    </div>
+
+    <button class="btn btn-primary mt-2" type="submit">Save</button>
+    <button class="btn btn-danger mt-2" type="reset">Cancel</button>
+</form>
 ```
 
 
