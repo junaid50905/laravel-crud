@@ -56,7 +56,6 @@ views/backend/teacher/create.blade.php
     {{-- end error message --}}
 
     <form action="" method="POST">
-      @csrf
         <div class="form-group">
           <label for="" class="form-label">Teacher Name</label>
           <input type="text" name="teacher_name" id="" class="form-control" placeholder="" aria-describedby="helpId">
@@ -115,6 +114,10 @@ Route::get('/admin/teacher/create', [TeacherController::class, 'create'])->name(
         </ul>
       </li><!-- End Teachers Nav -->
   ```
+
+
+
+
 
 
 
@@ -221,6 +224,97 @@ Route::get('/admin/color/create', [ColorController::class, 'create'])->name('col
     </ul>
 </li><!-- End Color Nav -->
 ```
+
+### Store
+
+#### Make a request file for color
+```
+php artisan make:request ColorRequest
+```
+authorize will be true in autorize method and writ rules in rules method
+
+app/Http/Requests/ColorRequest.php
+```
+public function authorize(): bool
+    {
+        return true;
+    }
+
+    public function rules(): array
+    {
+        return [
+            'color_name' => ['required', 'max:255'],
+        ];
+    }
+```
+
+#### create a method named store in ColorController
+```
+public function store(ColorRequest $request)
+    {
+        try {
+            $new_color = $request->all();
+            Color::create($new_color);
+            return redirect()->route('category.list')->withSuccess_add('Successfully added new product');
+        } catch (Exception $e) {
+            return redirect()->back()->withError_add($e->getMessage());
+        }
+    }
+```
+
+#### make a route for store method then connect the route with form
+
+routes/web.php
+```
+Route::get('/admin/color/store', [ColorController::class, 'store'])->name('color.store');
+```
+
+connect the route link with form action attribute and put the @csrf token after the form element
+
+backend/color/create.php
+```
+<form action="{{ route('color.create') }}" method="POST">
+        @csrf
+        <div class="form-group">
+          <label for="" class="form-label">Color Name</label>
+          <input type="text" name="student_name" id="" class="form-control" placeholder="" aria-describedby="helpId">
+          @error('student_name')
+              <p class="text-danger">{{ $message; }}</p>
+          @enderror
+        </div>
+        
+        <button class="btn btn-primary mt-2" type="submit">Save</button>
+        <button class="btn btn-danger mt-2" type="reset">Cancel</button>
+    </form>
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
